@@ -112,7 +112,7 @@ export const listBlogs = async (req, res) => {
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
       .select(
-        '_id title slug excerpt categories tags postedBy createdAt updatedAt',
+        '_id title slug excerpt categories tags postedBy createdAt updatedAt image',
       );
     if (!data) return res.status(400).send('Can not find data');
     res.json({ total: data.length, data });
@@ -135,7 +135,7 @@ export const listAllBlogsCategoriesTags = async (req, res) => {
       .skip(skip)
       .limit(limit)
       .select(
-        '_id title slug excerpt categories tags postedBy createdAt updatedAt',
+        '_id title slug excerpt categories tags postedBy createdAt updatedAt image',
       )
       .exec();
     if (!blogs) return res.status(400).send('blogs not found');
@@ -161,7 +161,7 @@ export const getSingleBlog = async (req, res) => {
       .populate('tags', '_id name slug')
       .populate('postedBy', '_id name')
       .select(
-        '_id title body mtitle slug categories tags postedBy createdAt updateAt',
+        '_id title body mtitle slug categories tags postedBy createdAt updateAt image',
       )
       .exec();
     if (!blog) return res.status(400).send('blog not found');
@@ -317,7 +317,9 @@ export const listPublishBlogs = async (req, res) => {
     const data = await Blog.find({ published: true })
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
-      .select('_id title excerpt slug postedBy published createdAt updatedAt');
+      .select(
+        '_id title excerpt slug postedBy published createdAt updatedAt image',
+      );
     if (!data) return res.status(400).send('Can not find data');
     res.json({ total: data.length, data });
   } catch (err) {
@@ -331,7 +333,9 @@ export const listUnpublishBlogs = async (req, res) => {
     const data = await Blog.find({ published: false })
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
-      .select('_id title excerpt slug postedBy published createdAt updatedAt');
+      .select(
+        '_id title excerpt slug postedBy published createdAt updatedAt image',
+      );
     if (!data) return res.status(400).send('Can not find data');
     res.json({ total: data.length, data });
   } catch (err) {
@@ -350,7 +354,9 @@ export const listBlogsByUser = async (req, res) => {
       .populate('categories', '_id name slug')
       .populate('tags', '_id name slug')
       .populate('postedBy', '_id name ')
-      .select('_id title slug postedBy categories tags createdAt updatedAt')
+      .select(
+        '_id title slug postedBy categories tags createdAt updatedAt image',
+      )
       .exec();
     if (!blogs) return res.status(400).send('User blogs not found');
     res.json({ total: blogs.length, blogs });
