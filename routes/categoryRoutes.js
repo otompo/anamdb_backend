@@ -23,7 +23,7 @@ router
     createCategory,
   );
 
-router.route('/categories').get(requireSignin, adminMiddleware, getCategories);
+router.route('/categories').get(getCategories);
 router.route('/category/:slug').get(getSingleCategory);
 router
   .route('/category/:slug')
