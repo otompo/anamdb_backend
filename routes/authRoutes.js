@@ -23,26 +23,26 @@ const router = express.Router();
 router.route('/register').post(register);
 router.route('/login').post(login);
 router.route('/logout').get(logout);
-router.route('/current-user').get(requireSignin, currentUser);
+router.route('/current-user').get(requireSignin, isAuth, currentUser);
 router.route('/userpublicprofile/:username').get(getUserProfile);
 // router.route('/profile/:username').get(authMiddleware, getUserProfile);
-router.route('/profile/:username').put(requireSignin, updateProfile);
+router.route('/profile/:username').put(requireSignin, isAuth, updateProfile);
 router
   .route('/profile/password/:username')
-  .put(requireSignin, updateUserPassword);
+  .put(requireSignin, isAuth, updateUserPassword);
 
 router
   .route('/make-user-admin/:username')
   .put(requireSignin, adminMiddleware, makeUserAdmin);
 router
   .route('/remove-user-admin/:username')
-  .put(requireSignin, adminMiddleware, removeAsAdmin);
+  .put(requireSignin, isAuth, adminMiddleware, removeAsAdmin);
 
 router
   .route('/getadminusers')
-  .get(requireSignin, adminMiddleware, getAdminUsers);
+  .get(requireSignin, isAuth, adminMiddleware, getAdminUsers);
 router
   .route('/getmembersusers')
-  .get(requireSignin, adminMiddleware, getMembersUsers);
+  .get(requireSignin, isAuth, adminMiddleware, getMembersUsers);
 
 module.exports = router;
