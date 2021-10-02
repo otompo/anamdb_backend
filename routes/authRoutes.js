@@ -16,7 +16,6 @@ import {
   adminMiddleware,
   authMiddleware,
   isAuth,
-  requireSignin,
 } from '../middlewares';
 const router = express.Router();
 
