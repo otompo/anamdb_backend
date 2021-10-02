@@ -2,12 +2,12 @@ import expressJwt from 'express-jwt';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel';
 
-export const requireSignin = expressJwt({
-  // secret expiryDate
-  getToken: (req, res) => req.cookies.token,
-  secret: process.env.JWT_SECRET,
-  algorithms: ['HS256'],
-});
+// export const requireSignin = expressJwt({
+//   // secret expiryDate
+//   getToken: (req, res) => req.cookies.token,
+//   secret: process.env.JWT_SECRET,
+//   algorithms: ['HS256'],
+// });
 
 export const isAuth = (req, res, next) => {
   const authorization = req.headers.authorization;
