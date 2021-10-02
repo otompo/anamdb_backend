@@ -1,6 +1,5 @@
 import express from 'express';
 import {
-  requireSignin,
   adminMiddleware,
   authMiddleware,
   isAuth,
@@ -22,7 +21,7 @@ import {
 
 const router = express.Router();
 
-router.route('/blog').post(requireSignin, isAuth, createBlog);
+router.route('/blog').post(isAuth, createBlog);
 
 router.route('/blogs').get(listBlogs);
 router
@@ -31,38 +30,38 @@ router
 router.route('/blog/:slug').get(getSingleBlog);
 router
   .route('/blog/:slug')
-  .delete(requireSignin, isAuth, adminMiddleware, deleteBlog);
+  .delete(isAuth, adminMiddleware, deleteBlog);
 router
   .route('/blog/:slug')
-  .put(requireSignin, isAuth, adminMiddleware, updateBlog);
+  .put(isAuth, adminMiddleware, updateBlog);
 router.route('/blog/img/:slug').get(getImage);
 router
   .route('/blogs/listpublished')
-  .get(requireSignin, isAuth, adminMiddleware, listPublishBlogs);
+  .get(isAuth, adminMiddleware, listPublishBlogs);
 router
   .route('/blogs/listunpublished')
-  .get(requireSignin, isAuth, adminMiddleware, listUnpublishBlogs);
+  .get(isAuth, adminMiddleware, listUnpublishBlogs);
 // router.route('/blog/related').post(listRelated);
 // router.route('/blogs/search').get(listSearch);
 
 // this Auth user blog crud
-// router.route('/user/blog').post(requireSignin, authMiddleware, createBlog);
+// router.route('/user/blog').post(authMiddleware, createBlog);
 router.route('/:userId/blogs').get(listBlogsByUser);
 
 // router
 //   .route('/user/blog/:slug')
-//   .delete(requireSignin, authMiddleware, canUpdateDeleteBlog, removeBlog);
+//   .delete( isAuth, authMiddleware, canUpdateDeleteBlog, removeBlog);
 
 // router
 //   .route('/user/blog/:slug')
-//   .put(requireSignin, authMiddleware, canUpdateDeleteBlog, updateBlog);
+//   .put( isAuth, authMiddleware, canUpdateDeleteBlog, updateBlog);
 
 router
   .route('/blog/publish/:slug')
-  .put(requireSignin, isAuth, adminMiddleware, publishBlog);
+  .put(isAuth, adminMiddleware, publishBlog);
 
 router
   .route('/blog/unpublish/:slug')
-  .put(requireSignin, isAuth, adminMiddleware, unpublishBlog);
+  .put(isAuth, adminMiddleware, unpublishBlog);
 
 module.exports = router;
