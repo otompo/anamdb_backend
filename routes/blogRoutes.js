@@ -14,7 +14,7 @@ import {
   getImage,
   listPublishBlogs,
   listUnpublishBlogs,
-  listAllBlogsCategoriesTags,
+ listAllBlogsCategories,
   publishBlog,
   unpublishBlog,
 } from './../controllers/blogController';
@@ -24,9 +24,7 @@ const router = express.Router();
 router.route('/blog').post(isAuth, createBlog);
 
 router.route('/blogs').get(listBlogs);
-router
-  .route('/blogs/list-blogs-categories-tags')
-  .post(listAllBlogsCategoriesTags);
+router.route('/blogs/list-blogs-categories').post(listAllBlogsCategories);
 router.route('/blog/:slug').get(getSingleBlog);
 router
   .route('/blog/:slug')
