@@ -1,5 +1,4 @@
 import Blog from '../models/blogModel';
-import Tag from '../models/tagsModel';
 import Category from '../models/categoryModel';
 import User from '../models/userModel';
 import fs from 'fs';
@@ -20,7 +19,7 @@ export const createBlog = (req, res) => {
       });
     }
 
-    const { title, body, categories, tags } = fields;
+    const { title, body, categories } = fields;
 
     if (!title || !title.length) {
       return res.status(400).json({
@@ -40,12 +39,6 @@ export const createBlog = (req, res) => {
       });
     }
 
-    if (!tags || tags.length === 0) {
-      return res.status(400).json({
-        error: 'At least one tag is required',
-      });
-    }
-
     let blog = new Blog();
     blog.title = title;
     blog.body = body;
@@ -53,10 +46,8 @@ export const createBlog = (req, res) => {
     blog.slug = slugify(title).toLowerCase();
     blog.mtitle = `${title} | ${process.env.APP_NAME}`;
     blog.mdesc = body.substring(0, 160);
-    blog.postedBy = req.user._id;
-    // categories and tags
+
     let arrayOfCategories = categories && categories.split(',');
-    let arrayOfTags = tags && tags.split(',');
 
     if (files.image) {
       if (files.image.size > 10000000) {
@@ -74,7 +65,7 @@ export const createBlog = (req, res) => {
           error: errorHandler(err),
         });
       }
-      // res.json(result);
+
       Blog.findByIdAndUpdate(
         result._id,
         { $push: { categories: arrayOfCategories } },
@@ -85,19 +76,7 @@ export const createBlog = (req, res) => {
             error: errorHandler(err),
           });
         } else {
-          Blog.findByIdAndUpdate(
-            result._id,
-            { $push: { tags: arrayOfTags } },
-            { new: true },
-          ).exec((err, result) => {
-            if (err) {
-              return res.status(400).json({
-                error: errorHandler(err),
-              });
-            } else {
-              res.json(result);
-            }
-          });
+          res.json(result);
         }
       });
     });
@@ -108,11 +87,10 @@ export const listBlogs = async (req, res) => {
   try {
     const data = await Blog.find({ published: true })
       .populate('categories', '_id name slug')
-      .populate('tags', '_id name slug')
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
       .select(
-        '_id title slug excerpt categories tags postedBy createdAt updatedAt image',
+        '_id title slug excerpt categories  postedBy createdAt updatedAt image',
       );
     if (!data) return res.status(400).send('Can not find data');
     res.json({ total: data.length, data });
@@ -122,20 +100,19 @@ export const listBlogs = async (req, res) => {
   }
 };
 
-// Get list of all blogs categories and tags help implement load more function
-export const listAllBlogsCategoriesTags = async (req, res) => {
+// Get list of all blogs and categories  help implement load more function
+export const listAllBlogsCategories = async (req, res) => {
   try {
     let limit = req.body.limit ? parseInt(req.body.limit) : 10;
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
     const blogs = await Blog.find({ published: true })
       .populate('categories', '_id name slug')
-      .populate('tags', '_id name slug')
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .select(
-        '_id title slug excerpt categories tags postedBy createdAt updatedAt image',
+        '_id title slug excerpt categories  postedBy createdAt updatedAt image',
       )
       .exec();
     if (!blogs) return res.status(400).send('blogs not found');
@@ -143,9 +120,7 @@ export const listAllBlogsCategoriesTags = async (req, res) => {
     const categories = await Category.find({}).exec();
     if (!categories) return res.status(400).send('Categories not found');
 
-    const tags = await Tag.find({}).exec();
-    if (!tags) return res.status(400).send('tags not found');
-    res.status(200).json({ size: blogs.length, blogs, tags, categories });
+    res.status(200).json({ size: blogs.length, blogs, categories });
   } catch (err) {
     console.log(err);
     return res.status(400).send('Can not fetch blog data');
@@ -158,10 +133,9 @@ export const getSingleBlog = async (req, res) => {
     const slug = req.params.slug.toLowerCase();
     const blog = await Blog.findOne({ slug, published: true })
       .populate('categories', '_id name slug')
-      .populate('tags', '_id name slug')
       .populate('postedBy', '_id name')
       .select(
-        '_id title body mtitle slug categories tags postedBy createdAt updateAt image',
+        '_id title body mtitle slug categories  postedBy createdAt updateAt image',
       )
       .exec();
     if (!blog) return res.status(400).send('blog not found');
@@ -210,7 +184,7 @@ export const updateBlog = async (req, res) => {
       let slugBeforeMerge = blog.slug;
       blog = _.merge(blog, fields);
       blog.slug = slugBeforeMerge;
-      const { body, mdesc, categories, tags } = fields;
+      const { body, mdesc, categories } = fields;
       if (body) {
         blog.excerpt = smartTrim(body, 320, ' ', ' ...');
         blog.mdesc = body.substring(0, 160);
@@ -219,9 +193,6 @@ export const updateBlog = async (req, res) => {
         blog.categories = categories.split(',');
       }
 
-      if (tags) {
-        blog.tags = tags.split(',');
-      }
       if (files.image) {
         if (files.image.size > 10000000) {
           return res.status(400).json({
@@ -352,11 +323,8 @@ export const listBlogsByUser = async (req, res) => {
 
     const blogs = await Blog.find({ postedBy: userId, published: true })
       .populate('categories', '_id name slug')
-      .populate('tags', '_id name slug')
       .populate('postedBy', '_id name ')
-      .select(
-        '_id title slug postedBy categories tags createdAt updatedAt image',
-      )
+      .select('_id title slug postedBy categories createdAt updatedAt image')
       .exec();
     if (!blogs) return res.status(400).send('User blogs not found');
     res.json({ total: blogs.length, blogs });
