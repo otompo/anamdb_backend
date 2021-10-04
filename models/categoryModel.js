@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const catagorySchema = new Schema(
+const categorySchema = new Schema(
   {
     name: {
       type: String,
@@ -19,4 +19,4 @@ const catagorySchema = new Schema(
   { timestamps: true },
 );
 
-export default mongoose.model('Category', catagorySchema);
+export default mongoose.model('Category', categorySchema);
