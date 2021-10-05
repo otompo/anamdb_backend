@@ -43,7 +43,7 @@ export const getSingleCategory = (req, res) => {
 export const getCategories = async (req, res) => {
   try {
     const categories = await Category.find({}).exec();
-    res.status(200).json({ total: categories.length, categories });
+    res.json(categories);
   } catch (err) {
     console.log(err);
     return res.status(400).send('Categories not found. Try again.');
