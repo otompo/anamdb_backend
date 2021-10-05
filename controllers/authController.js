@@ -53,7 +53,9 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       {
         _id: user._id,
-        role: user.role,
+        name: user.name,
+      email: user.email,
+        username:user.username
       },
       process.env.JWT_SECRET || 'somethingsecretoneandgreate',
       {
@@ -63,7 +65,11 @@ export const login = async (req, res) => {
     // return user and token to client, exclude hashed password
     user.password = undefined;
     // send token in cookie
-
+ // send token in cookie
+    res.cookie('token', token, {
+      httpOnly: true
+      // secure: true, // only works on https
+    });
     const { ...others } = user._doc;
     // send user as json response
     res.status(200).json({ ...others, token });
