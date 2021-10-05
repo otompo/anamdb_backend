@@ -25,16 +25,16 @@ router.route('/blogs/list-blogs-categories').post(listAllBlogsCategories);
 router.route('/blog/publish/:slug').get(getSingleBlog);
 router
   .route('/blog/unpublish/:slug')
-  .get(isAuth, adminMiddleware, getSingleUnplishBlog);
-router.route('/blog/:slug').delete(isAuth, adminMiddleware, deleteBlog);
-router.route('/blog/:slug').put(isAuth, adminMiddleware, updateBlog);
+  .get(adminMiddleware, getSingleUnplishBlog);
+router.route('/blog/:slug').delete(adminMiddleware, deleteBlog);
+router.route('/blog/:slug').put( adminMiddleware, updateBlog);
 router.route('/blog/img/:slug').get(getImage);
 router
   .route('/blogs/listpublished')
-  .get(isAuth, adminMiddleware, listPublishBlogs);
+  .get(adminMiddleware, listPublishBlogs);
 router
   .route('/blogs/listunpublished')
-  .get(isAuth, adminMiddleware, listUnpublishBlogs);
+  .get( adminMiddleware, listUnpublishBlogs);
 // router.route('/blog/related').post(listRelated);
 // router.route('/blogs/search').get(listSearch);
 
@@ -50,10 +50,10 @@ router.route('/:userId/blogs').get(listBlogsByUser);
 //   .route('/user/blog/:slug')
 //   .put( authMiddleware, canUpdateDeleteBlog, updateBlog);
 
-router.route('/blog/publish/:slug').put(isAuth, adminMiddleware, publishBlog);
+router.route('/blog/publish/:slug').put(adminMiddleware, publishBlog);
 
 router
   .route('/blog/unpublish/:slug')
-  .put(isAuth, adminMiddleware, unpublishBlog);
+  .put(adminMiddleware, unpublishBlog);
 
 module.exports = router;
