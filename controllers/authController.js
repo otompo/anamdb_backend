@@ -53,8 +53,7 @@ export const login = async (req, res) => {
         _id: user._id,
         name: user.name,
         username: user.username,
-        email: user.email,
-        role: user.role,
+        email: user.email       
       },
 
       process.env.JWT_SECRET || 'somethingsecretoneandgreate',
