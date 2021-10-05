@@ -14,7 +14,6 @@ import {
 } from '../controllers/authController';
 import {
   adminMiddleware,
-  authMiddleware,
   isAuth,
 } from '../middlewares';
 const router = express.Router();
@@ -24,7 +23,7 @@ router.route('/login').post(login);
 router.route('/logout').get(logout);
 router.route('/current-user').get(isAuth, currentUser);
 router.route('/userpublicprofile/:username').get(getUserProfile);
-// router.route('/profile/:username').get(authMiddleware, getUserProfile);
+// router.route('/profile/:username').get(isAuth, getUserProfile);
 router.route('/profile/:username').put(isAuth, updateProfile);
 router
   .route('/profile/password/:username')
@@ -32,16 +31,16 @@ router
 
 router
   .route('/make-user-admin/:username')
-  .put(adminMiddleware, makeUserAdmin);
+  .put(isAuth, makeUserAdmin);
 router
   .route('/remove-user-admin/:username')
-  .put(isAuth, adminMiddleware, removeAsAdmin);
+  .put(isAuth, removeAsAdmin);
 
 router
   .route('/getadminusers')
-  .get(isAuth, adminMiddleware, getAdminUsers);
+  .get(isAuth, getAdminUsers);
 router
   .route('/getmembersusers')
-  .get(isAuth, adminMiddleware, getMembersUsers);
+  .get(isAuth, getMembersUsers);
 
 module.exports = router;
