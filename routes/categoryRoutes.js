@@ -19,7 +19,6 @@ router
     isAuth,
     categoryCreateValidator,
     runValidation,
-    adminMiddleware,
     createCategory,
   );
 
@@ -27,6 +26,6 @@ router.route('/categories').get(getCategories);
 router.route('/category/:slug').get(getSingleCategory);
 router
   .route('/category/:slug')
-  .delete(isAuth, adminMiddleware, deleteCategory);
+  .delete(isAuth, deleteCategory);
 
 module.exports = router;
