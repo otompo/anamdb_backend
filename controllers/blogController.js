@@ -270,7 +270,7 @@ export const listRelated = async (req, res) => {
 
 export const publishBlog = async (req, res) => {
   try {
-    const slug = req.params.slug.toLowerCase();
+    const slug = req.params.slug;
     const blog = await Blog.findOne({ slug }).exec();
     if (!blog) return res.status(400).send('Blog not found');
     const updated = await Blog.findOneAndUpdate(
@@ -288,7 +288,7 @@ export const publishBlog = async (req, res) => {
 
 export const unpublishBlog = async (req, res) => {
   try {
-    let slug = req.params.slug.toLowerCase();
+    let slug = req.params.slug
     const blog = await Blog.findOne({ slug }).exec();
     if (!blog) return res.status(400).send('Blog not found');
     const updated = await Blog.findOneAndUpdate(
