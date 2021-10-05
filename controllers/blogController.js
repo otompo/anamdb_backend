@@ -76,6 +76,7 @@ export const createBlog = (req, res) => {
             error: errorHandler(err),
           });
         } else {
+          result.image = undefined
           res.json(result);
         }
       });
