@@ -279,7 +279,7 @@ export const publishBlog = async (req, res) => {
       { new: true },
     ).exec();
     if (!updated) return res.status(400).send('Can not update blog');
-    res.send('Blog published succesfully');
+    res.send({ok:true})
   } catch (err) {
     console.log(err);
     return res.status(400).send('Publish blog failed');
@@ -297,7 +297,7 @@ export const unpublishBlog = async (req, res) => {
       { new: true },
     ).exec();
     if (!updated) return res.status(400).send('Can not update blog');
-    res.send('Blog Un-published successfully');
+     res.send({ok:true})
   } catch (err) {
     console.log(err);
     return res.status(400).send(err.message);
