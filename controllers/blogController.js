@@ -46,7 +46,7 @@ export const createBlog = (req, res) => {
     blog.slug = slugify(title).toLowerCase();
     blog.mtitle = `${title} | ${process.env.APP_NAME}`;
     blog.mdesc = body.substring(0, 160);
-
+    blog.postedBy = req.user._id;
     let arrayOfCategories = categories && categories.split(',');
 
     if (files.image) {
