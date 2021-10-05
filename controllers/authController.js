@@ -2,6 +2,7 @@ import User from '../models/userModel';
 import jwt from 'jsonwebtoken';
 import { hashPassword, comparePassword } from '../utils/authHelpers';
 import shortId from 'shortid';
+import { generateToken } from '../middlewares';
 
 export const register = async (req, res) => {
   try {
@@ -48,14 +49,12 @@ export const login = async (req, res) => {
     const match = await comparePassword(password, user.password);
     if (!match) return res.status(400).send('Wrong password');
     // create signed jwt
+
     const token = jwt.sign(
       {
         _id: user._id,
-        name: user.name,
-        username: user.username,
-        email: user.email       
+        role: user.role,
       },
-
       process.env.JWT_SECRET || 'somethingsecretoneandgreate',
       {
         expiresIn: '3d',
@@ -64,10 +63,7 @@ export const login = async (req, res) => {
     // return user and token to client, exclude hashed password
     user.password = undefined;
     // send token in cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      // secure: true, // only works on https
-    });
+
     // send user as json response
     res.send({ user, token });
   } catch (err) {
@@ -256,8 +252,30 @@ export const userPhoto = (req, res) => {
       return res.send(user.photo.data);
     }
   });
-};
-
-  
-  
+}; 
   */
+
+export const userstats = async (req, res) => {
+  const date = new Date();
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+  try {
+    const data = await User.aggregate([
+      { $match: { createdAt: { $gte: lastYear } } },
+      {
+        $project: {
+          month: { $month: '$createdAt' },
+        },
+      },
+      {
+        $group: {
+          _id: '$month',
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
