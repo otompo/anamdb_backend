@@ -90,10 +90,10 @@ export const listBlogs = async (req, res) => {
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
       .select(
-        '_id title slug excerpt categories  postedBy createdAt updatedAt image',
+        '_id title slug excerpt categories  postedBy createdAt updatedAt ',
       );
     if (!data) return res.status(400).send('Can not find data');
-    res.json({ total: data.length, data });
+    res.json(data);
   } catch (err) {
     console.log(err);
     return res.status(400).send('Can not fetch blog data');
@@ -111,16 +111,14 @@ export const listAllBlogsCategories = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .select(
-        '_id title slug excerpt categories  postedBy createdAt updatedAt image',
-      )
+      .select('_id title slug excerpt categories  postedBy createdAt updatedAt')
       .exec();
     if (!blogs) return res.status(400).send('blogs not found');
 
     const categories = await Category.find({}).exec();
     if (!categories) return res.status(400).send('Categories not found');
 
-    res.status(200).json({ size: blogs.length, blogs, categories });
+    res.json(blogs);
   } catch (err) {
     console.log(err);
     return res.status(400).send('Can not fetch blog data');
@@ -135,7 +133,26 @@ export const getSingleBlog = async (req, res) => {
       .populate('categories', '_id name slug')
       .populate('postedBy', '_id name')
       .select(
-        '_id title body mtitle slug categories  postedBy createdAt updateAt image',
+        '_id title body mtitle slug categories  postedBy createdAt updateAt ',
+      )
+      .exec();
+    if (!blog) return res.status(400).send('blog not found');
+    res.json(blog);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err.message);
+  }
+};
+
+// Get Single unpublish Blog
+export const getSingleUnplishBlog = async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const blog = await Blog.findOne({ slug, published: false })
+      .populate('categories', '_id name slug')
+      .populate('postedBy', '_id name')
+      .select(
+        '_id title body mtitle slug categories  postedBy createdAt updateAt',
       )
       .exec();
     if (!blog) return res.status(400).send('blog not found');
@@ -288,11 +305,9 @@ export const listPublishBlogs = async (req, res) => {
     const data = await Blog.find({ published: true })
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
-      .select(
-        '_id title excerpt slug postedBy published createdAt updatedAt image',
-      );
+      .select('_id title excerpt slug postedBy published createdAt updatedAt ');
     if (!data) return res.status(400).send('Can not find data');
-    res.json({ total: data.length, data });
+    res.json(data);
   } catch (err) {
     console.log(err);
     return res.status(400).send('Can not fetch blog data');
@@ -304,11 +319,9 @@ export const listUnpublishBlogs = async (req, res) => {
     const data = await Blog.find({ published: false })
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
-      .select(
-        '_id title excerpt slug postedBy published createdAt updatedAt image',
-      );
+      .select('_id title excerpt slug postedBy published createdAt updatedAt');
     if (!data) return res.status(400).send('Can not find data');
-    res.json({ total: data.length, data });
+    res.json(data);
   } catch (err) {
     console.log(err);
     return res.status(400).send('Can not fetch blog data');
@@ -324,10 +337,10 @@ export const listBlogsByUser = async (req, res) => {
     const blogs = await Blog.find({ postedBy: userId, published: true })
       .populate('categories', '_id name slug')
       .populate('postedBy', '_id name ')
-      .select('_id title slug postedBy categories createdAt updatedAt image')
+      .select('_id title slug postedBy categories createdAt updatedAt ')
       .exec();
     if (!blogs) return res.status(400).send('User blogs not found');
-    res.json({ total: blogs.length, blogs });
+    res.json(blogs);
   } catch (err) {
     console.log(err);
     return res.status(400).send('User blog not found');
