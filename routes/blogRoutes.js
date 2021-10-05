@@ -23,12 +23,12 @@ router.route('/blog').post(isAuth, createBlog);
 router.route('/blogs').get(listBlogs);
 router.route('/blogs/list-blogs-categories').post(listAllBlogsCategories);
 router.route('/blog/publish/:slug').get(getSingleBlog);
-router.route('/blog/unpublish/:slug').get(isAdmin, getSingleUnplishBlog);
-router.route('/blog/:slug').delete(isAuth, isAdmin, deleteBlog);
-router.route('/blog/:slug').put(isAuth, isAdmin, updateBlog);
+router.route('/blog/unpublish/:slug').get(isAuth, getSingleUnplishBlog);
+router.route('/blog/:slug').delete(isAuth, deleteBlog);
+router.route('/blog/:slug').put(isAuth, updateBlog);
 router.route('/blog/img/:slug').get(getImage);
-router.route('/blogs/listpublished').get(isAuth, isAdmin, listPublishBlogs);
-router.route('/blogs/listunpublished').get(isAuth, isAdmin, listUnpublishBlogs);
+router.route('/blogs/listpublished').get(isAuth,  listPublishBlogs);
+router.route('/blogs/listunpublished').get(isAuth, listUnpublishBlogs);
 // router.route('/blog/related').post(listRelated);
 // router.route('/blogs/search').get(listSearch);
 
@@ -44,8 +44,8 @@ router.route('/:userId/blogs').get(listBlogsByUser);
 //   .route('/user/blog/:slug')
 //   .put( authMiddleware, canUpdateDeleteBlog, updateBlog);
 
-router.route('/blog/publish/:slug').put(isAuth, isAdmin, publishBlog);
+router.route('/blog/publish/:slug').put(isAuth, publishBlog);
 
-router.route('/blog/unpublish/:slug').put(isAuth, isAdmin, unpublishBlog);
+router.route('/blog/unpublish/:slug').put(isAuth, unpublishBlog);
 
 module.exports = router;
