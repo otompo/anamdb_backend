@@ -64,8 +64,9 @@ export const login = async (req, res) => {
     user.password = undefined;
     // send token in cookie
 
+    const { ...others } = user._doc;
     // send user as json response
-    res.send({ user, token });
+    res.status(200).json({ ...others, token });
   } catch (err) {
     console.log(err);
     return res.status(400).send('Error. Try again.');
