@@ -192,7 +192,7 @@ export const getImage = async (req, res) => {
 export const updateBlog = async (req, res) => {
   try {
     const slug = req.params.slug.toLowerCase();
-    let blog = await Blog.findOne({ slug }).exec();
+    let blog = await Blog.findOne({ slug }).select('-image').exec();
     if (!blog) return res.status(400).send('blog not found');
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -201,7 +201,7 @@ export const updateBlog = async (req, res) => {
       let slugBeforeMerge = blog.slug;
       blog = _.merge(blog, fields);
       blog.slug = slugBeforeMerge;
-      const { body, mdesc, categories } = fields;
+      const { body, mdesc, categories, tags } = fields;
       if (body) {
         blog.excerpt = smartTrim(body, 320, ' ', ' ...');
         blog.mdesc = body.substring(0, 160);
@@ -210,6 +210,9 @@ export const updateBlog = async (req, res) => {
         blog.categories = categories.split(',');
       }
 
+      if (tags) {
+        blog.tags = tags.split(',');
+      }
       if (files.image) {
         if (files.image.size > 10000000) {
           return res.status(400).json({
