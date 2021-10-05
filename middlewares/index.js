@@ -6,9 +6,6 @@ export const generateToken = (user) => {
   return jwt.sign(
     {
       _id: user._id,
-      name: user.name,
-      username: user.username,
-      email: user.email,
       role: user.role,
     },
     process.env.JWT_SECRET || 'somethingsecretone',
@@ -48,11 +45,21 @@ export const isAuth = (req, res, next) => {
 
 // Admin Middleware
 export const adminMiddleware = async (req, res, next) => {
-  const user = await User.findById(req.user._id).exec();
+  // const user = await User.findById(req.user._id).exec();
+  const user = await User.findById(req.user._id);
+
   if (!user.role.includes('Admin')) {
     return res.status(400).json({
       error: 'Admin resource. Access denied',
     });
+  }
+  next();
+};
+
+export const isAdmin = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if (req.user && !user.role.includes('Admin')) {
+    res.status(401).send({ message: 'Invalid Admin Token' });
   }
   next();
 };
