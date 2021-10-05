@@ -341,7 +341,7 @@ export const listBlogsByUser = async (req, res) => {
     const blogs = await Blog.find({ postedBy: userId, published: true })
       .populate('categories', '_id name slug')
       .populate('postedBy', '_id name ')
-      .select('_id title slug postedBy categories createdAt updatedAt ')
+      .select('_id published title excerpt slug postedBy categories createdAt updatedAt')
       .exec();
     if (!blogs) return res.status(400).send('User blogs not found');
     res.json(blogs);
