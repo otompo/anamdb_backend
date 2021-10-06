@@ -20,7 +20,7 @@ const router = express.Router();
 
 router.route('/blog').post(isAuth, createBlog);
 
-router.route('/blogs').get(listBlogs);
+router.route('/blogs').post(listBlogs);
 router.route('/blogs/list-blogs-categories').post(listAllBlogsCategories);
 router.route('/blog/:slug').get(getSingleBlog);
 router.route('/blog/unpublish/:slug').get(isAuth, getSingleUnplishBlog);
