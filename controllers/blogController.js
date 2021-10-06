@@ -318,7 +318,9 @@ export const listUnpublishBlogs = async (req, res) => {
 
 export const listBlogsByUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId).exec();
+    const user = await User.findById(req.params.userId)
+    .sort({ createdAt: -1 })
+    .exec();
     if (!user) return res.status(400).send('User not found');
     let userId = user._id;
 
