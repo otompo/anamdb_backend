@@ -22,7 +22,7 @@ router.route('/blog').post(isAuth, createBlog);
 
 router.route('/blogs').get(listBlogs);
 router.route('/blogs/list-blogs-categories').post(listAllBlogsCategories);
-router.route('/blog/publish/:slug').get(getSingleBlog);
+router.route('/blog/:slug').get(getSingleBlog);
 router.route('/blog/unpublish/:slug').get(isAuth, getSingleUnplishBlog);
 router.route('/blog/:slug').delete(isAuth, deleteBlog);
 router.route('/blog/:slug').put(isAuth, updateBlog);
