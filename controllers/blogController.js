@@ -84,27 +84,6 @@ export const createBlog = (req, res) => {
   });
 };
 
-export const listBlogs = async (req, res) => {
-  try {   
-    const blogs = await Blog.find({ published: true })
-      .populate('categories', '_id name slug')
-      .populate('postedBy', '_id name')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .select('_id title slug excerpt categories username postedBy createdAt updatedAt')
-      .exec();
-    if (!blogs) return res.status(400).send('blogs not found');
-
-    const categories = await Category.find({}).exec();
-    if (!categories) return res.status(400).send({error:'Categories not found'});
-
-    res.json(blogs);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send({error:'Can not fetch blog data'});
-  }
-};
 
 // Get list of all blogs and categories  help implement load more function
 export const listAllBlogsCategories = async (req, res) => {
