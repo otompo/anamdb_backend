@@ -92,11 +92,11 @@ export const listAllBlogsCategories = async (req, res) => {
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
     const blogs = await Blog.find({ published: true })
       .populate('categories', '_id name slug')
-      .populate('postedBy', '_id name')
+      .populate('postedBy', '_id name username')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .select('_id title slug excerpt categories username  postedBy createdAt updatedAt')
+      .select('_id title slug excerpt categories  postedBy createdAt updatedAt')
       .exec();
     if (!blogs) return res.status(400).send('blogs not found');
 
