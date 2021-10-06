@@ -86,15 +86,22 @@ export const createBlog = (req, res) => {
 
 export const listBlogs = async (req, res) => {
   try {
-    const data = await Blog.find({ published: true })
+    let limit = req.body.limit ? parseInt(req.body.limit) : 10;
+    let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+    const blogs = await Blog.find({ published: true })
       .populate('categories', '_id name slug')
       .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
-      .select(
-        '_id title slug excerpt categories  postedBy createdAt updatedAt ',
-      );
-    if (!data) return res.status(400).send('Can not find data');
-    res.json(data);
+      .skip(skip)
+      .limit(limit)
+      .select('_id title slug excerpt categories  postedBy createdAt updatedAt')
+      .exec();
+    if (!blogs) return res.status(400).send('blogs not found');
+
+    const categories = await Category.find({}).exec();
+    if (!categories) return res.status(400).send('Categories not found');
+
+    res.json(blogs);
   } catch (err) {
     console.log(err);
     return res.status(400).send('Can not fetch blog data');
