@@ -92,7 +92,7 @@ export const listAllBlogsCategories = async (req, res) => {
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
     const blogs = await Blog.find({ published: true })
       .populate('categories', '_id name slug')
-      .populate('postedBy', '_id name username')
+      .populate('postedBy', '_id name')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
