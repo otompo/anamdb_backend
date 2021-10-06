@@ -113,7 +113,7 @@ export const makeUserAdmin = async (req, res) => {
       },
       { new: true },
     ).exec();
-    res.send(`${user.name}  is now an Admin `);
+     res.send({ ok: true });
     // console.log(roleUpdated);
   } catch (err) {
     console.log(err);
@@ -133,7 +133,7 @@ export const removeAsAdmin = async (req, res) => {
       },
       { new: true },
     ).exec();
-    res.send(`${user.name}  is remove as an Admin `);
+    res.send({ ok: true });
     // console.log(roleUpdated);
   } catch (err) {
     console.log(err);
