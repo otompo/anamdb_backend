@@ -2,7 +2,6 @@ import express from 'express';
 import { adminMiddleware, isAdmin, isAuth } from './../middlewares/index';
 import {
   createBlog,
-  listBlogs,
   listBlogsByUser,
   getSingleBlog,
   deleteBlog,
@@ -20,7 +19,6 @@ const router = express.Router();
 
 router.route('/blog').post(isAuth, createBlog);
 
-router.route('/blogs').get(listBlogs);
 router.route('/blogs/list-blogs-categories').post(listAllBlogsCategories);
 router.route('/blog/:slug').get(getSingleBlog);
 router.route('/blog/unpublish/:slug').get(isAuth, getSingleUnplishBlog);
